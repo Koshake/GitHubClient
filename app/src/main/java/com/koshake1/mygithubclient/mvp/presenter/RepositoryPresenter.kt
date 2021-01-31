@@ -20,4 +20,8 @@ class RepositoryPresenter(private val githubRepository: GithubRepository, privat
         return true
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        System.out.println("onDestroy presenter")
+    }
 }

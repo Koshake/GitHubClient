@@ -14,13 +14,22 @@ import kotlinx.android.synthetic.main.fragment_repository.*
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
-class RepositoryFragment(val repo : GithubRepository) : MvpAppCompatFragment(), IRepositoryView,
+class RepositoryFragment : MvpAppCompatFragment(), IRepositoryView,
     BackButtonListener {
     companion object {
-        fun newInstance(repo : GithubRepository) = RepositoryFragment(repo)
+        private const val REPOSITORY_ARG = "repository"
+
+        fun newInstance(repository: GithubRepository) = RepositoryFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(REPOSITORY_ARG, repository)
+            }
+        }
     }
+
     val presenter: RepositoryPresenter by moxyPresenter {
-            RepositoryPresenter(repo, App.instance.router)
+        val repository = arguments?.getParcelable<GithubRepository>(REPOSITORY_ARG) as GithubRepository
+
+        RepositoryPresenter(repository, App.instance.router)
     }
 
     override fun onCreateView(
@@ -45,4 +54,9 @@ class RepositoryFragment(val repo : GithubRepository) : MvpAppCompatFragment(), 
     }
 
     override fun backPressed() = presenter.backPressed()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        System.out.println("onDestroy")
+    }
 }

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.koshake1.mygithubclient.ApiHolder
 import com.koshake1.mygithubclient.App
 import com.koshake1.mygithubclient.R
+import com.koshake1.mygithubclient.mvp.model.cache.room.RoomGithubUsersCache
 import com.koshake1.mygithubclient.mvp.model.repo.retrofit.RetrofitGithubUsersRepo
 import com.koshake1.mygithubclient.mvp.model.room.Database
 import com.koshake1.mygithubclient.mvp.presenter.UsersPresenter
@@ -30,7 +31,7 @@ class UsersFragment : MvpAppCompatFragment(), IUsersView, BackButtonListener {
     private val presenter by moxyPresenter {
         UsersPresenter(
             AndroidSchedulers.mainThread(),
-            RetrofitGithubUsersRepo(ApiHolder().api, AndroidNetworkStatus(App.instance), Database.getInstance()),
+            RetrofitGithubUsersRepo(ApiHolder().api, AndroidNetworkStatus(App.instance), RoomGithubUsersCache(Database.getInstance())),
             App.instance.router
         )
     }

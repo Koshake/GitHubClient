@@ -2,6 +2,8 @@ package com.koshake1.mygithubclient.mvp.model.repo.retrofit
 
 import com.koshake1.mygithubclient.mvp.model.GithubUser
 import com.koshake1.mygithubclient.mvp.model.api.IDataSource
+import com.koshake1.mygithubclient.mvp.model.cache.IGithubUsersCache
+import com.koshake1.mygithubclient.mvp.model.cache.room.RoomGithubUsersCache
 import com.koshake1.mygithubclient.mvp.model.network.INetworkStatus
 import com.koshake1.mygithubclient.mvp.model.repo.IGithubUsersRepo
 import com.koshake1.mygithubclient.mvp.model.room.Database
@@ -12,32 +14,19 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 class RetrofitGithubUsersRepo(
     private val api: IDataSource,
     private val networkStatus: INetworkStatus,
-    private val db: Database
+    private val userCache: IGithubUsersCache
 ) : IGithubUsersRepo {
+
     override fun getUsers() = networkStatus.isOnlineSingle().flatMap { isOnline ->
         if (isOnline) {
             api.getUsers().flatMap { users ->
                 Single.fromCallable {
-                    val roomUsers = users.map { user ->
-                        RoomGithubUser(
-                            user.id ?: "",
-                            user.login ?: "",
-                            user.avatarUrl ?: "",
-                            user.reposUrl ?: ""
-                        )
-                    }
-
-                    db.userDao.insert(roomUsers)
+                    userCache.saveUsersToCache(users)
                     users
                 }
-
             }
         } else {
-            Single.fromCallable {
-                db.userDao.getAll().map { roomUser ->
-                    GithubUser(roomUser.id, roomUser.login, roomUser.avatarUrl, roomUser.reposUrl)
-                }
-            }
+            userCache.getUsersFromCache()
         }
     }.subscribeOn(Schedulers.io())
 }
