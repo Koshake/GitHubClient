@@ -9,6 +9,7 @@ import com.koshake1.mygithubclient.ApiHolder
 import com.koshake1.mygithubclient.App
 import com.koshake1.mygithubclient.R
 import com.koshake1.mygithubclient.mvp.model.GithubUser
+import com.koshake1.mygithubclient.mvp.model.cache.room.RoomGithubRepositoriesCache
 import com.koshake1.mygithubclient.mvp.model.network.AndroidNetworkStatus
 import com.koshake1.mygithubclient.mvp.model.repo.retrofit.RetrofitGithubRepositoriesRepo
 import com.koshake1.mygithubclient.mvp.model.room.Database
@@ -21,22 +22,29 @@ import kotlinx.android.synthetic.main.fragment_user.*
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
-class UserFragment(private val user: GithubUser) : MvpAppCompatFragment(), IUserView,
+class UserFragment() : MvpAppCompatFragment(), IUserView,
     BackButtonListener {
     companion object {
+            private const val USER_ARG = "user"
 
-        fun newInstance(user: GithubUser) = UserFragment(user)
+            fun newInstance(user: GithubUser) = UserFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(USER_ARG, user)
+                }
+        }
     }
 
     private var adapter: UserAdapter? = null
 
     private val userPresenter by moxyPresenter {
+        val user = arguments?.getParcelable<GithubUser>(USER_ARG) as GithubUser
         UserPresenter(
+            user,
             AndroidSchedulers.mainThread(),
             RetrofitGithubRepositoriesRepo(
                 ApiHolder().api,
                 AndroidNetworkStatus(App.instance),
-                Database.getInstance()
+                RoomGithubRepositoriesCache(Database.getInstance())
             ),
             App.instance.router
         )
@@ -48,16 +56,7 @@ class UserFragment(private val user: GithubUser) : MvpAppCompatFragment(), IUser
         savedInstanceState: Bundle?
     ) = View.inflate(context, R.layout.fragment_user, null)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        userPresenter.setUser(user)
-    }
-
     override fun backPressed() = userPresenter.backPressed()
-
-    override fun setTitle(text: String) {
-        userToolbar.title = text
-    }
 
     override fun init() {
         mainRecycler.layoutManager = LinearLayoutManager(context)

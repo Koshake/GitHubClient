@@ -26,12 +26,6 @@ class UsersRVAdapter(
             tv_login.text = text
         }
 
-        override fun getLogin(): String {
-            with(containerView) {
-                return tv_login.text.toString()
-            }
-        }
-
         override fun loadAvatar(url: String) = with(containerView) {
             imageLoader.loadInto(url, iv_avatar)
         }

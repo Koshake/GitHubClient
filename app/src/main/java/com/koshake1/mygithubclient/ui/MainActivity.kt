@@ -1,9 +1,6 @@
 package com.koshake1.mygithubclient.ui
 
 import android.os.Bundle
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.koshake1.mygithubclient.App
 import com.koshake1.mygithubclient.R
 import com.koshake1.mygithubclient.mvp.presenter.MainPresenter
@@ -23,6 +20,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //BackPressure().exec()
     }
 
     override fun onResumeFragments() {
