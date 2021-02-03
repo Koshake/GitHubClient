@@ -2,6 +2,7 @@ package com.koshake1.mygithubclient.mvp.presenter
 
 import com.koshake1.mygithubclient.mvp.model.GithubUser
 import com.koshake1.mygithubclient.mvp.model.repo.IGithubUsersRepo
+import com.koshake1.mygithubclient.mvp.model.room.Database
 import com.koshake1.mygithubclient.mvp.presenter.list.IUserListPresenter
 import com.koshake1.mygithubclient.mvp.view.IUsersView
 import com.koshake1.mygithubclient.mvp.view.list.IUserItemView
@@ -9,12 +10,19 @@ import com.koshake1.mygithubclient.navigation.Screens
 import io.reactivex.rxjava3.core.Scheduler
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
+import javax.inject.Inject
 
 class UsersPresenter(
     private val mainThreadScheduler: Scheduler,
-    private val usersRepo: IGithubUsersRepo,
-    private val router: Router
+
 ) : MvpPresenter<IUsersView>() {
+
+    @Inject
+    lateinit var usersRepo: IGithubUsersRepo
+    @Inject
+    lateinit var router: Router
+    @Inject
+    lateinit var database: Database
 
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()

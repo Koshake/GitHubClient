@@ -10,12 +10,14 @@ import com.koshake1.mygithubclient.R
 import com.koshake1.mygithubclient.mvp.model.image.IImageLoader
 import com.koshake1.mygithubclient.mvp.presenter.list.IUserListPresenter
 import com.koshake1.mygithubclient.mvp.view.list.IUserItemView
+import com.koshake1.mygithubclient.ui.GlideImageLoader
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_user.view.*
+import javax.inject.Inject
 
 class UsersRVAdapter(
     private val presenter: IUserListPresenter,
-    private val imageLoader: IImageLoader<ImageView>
+    private val imageLoader: GlideImageLoader
 ) : RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
 
     inner class ViewHolder(override val containerView: View) :

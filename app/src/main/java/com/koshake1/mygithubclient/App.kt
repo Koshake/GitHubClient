@@ -1,14 +1,13 @@
 package com.koshake1.mygithubclient
 
 import android.app.Application
-import com.koshake1.mygithubclient.mvp.model.room.Database
-import ru.terrakok.cicerone.Cicerone
-import ru.terrakok.cicerone.Router
+import com.koshake1.mygithubclient.di.AppComponent
+import com.koshake1.mygithubclient.di.DaggerAppComponent
+import com.koshake1.mygithubclient.di.modules.AppModule
 
 class App : Application() {
-    private val cicerone: Cicerone<Router> by lazy {
-        Cicerone.create()
-    }
+    lateinit var appComponent: AppComponent
+        private set
 
     companion object {
         lateinit var instance: App
@@ -17,12 +16,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        Database.create(this)
+        appComponent = DaggerAppComponent.builder()
+            .appModule(AppModule(this))
+            .build()
     }
-
-    val navigatorHolder
-        get() = cicerone.navigatorHolder
-
-    val router
-        get() = cicerone.router
 }

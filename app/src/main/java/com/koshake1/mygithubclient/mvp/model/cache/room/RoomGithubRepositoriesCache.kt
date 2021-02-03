@@ -8,6 +8,7 @@ import com.koshake1.mygithubclient.mvp.model.room.RoomGithubRepository
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
 class RoomGithubRepositoriesCache(private val db: Database) : IGithubRepositoriesCache {
 

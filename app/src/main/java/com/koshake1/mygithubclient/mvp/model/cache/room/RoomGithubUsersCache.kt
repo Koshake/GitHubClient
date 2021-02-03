@@ -10,6 +10,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.*
 
 class RoomGithubUsersCache(private val db: Database) : IGithubUsersCache {
+
     override fun getUsersFromCache(): Single<List<GithubUser>> =
         Single.fromCallable {
             db.userDao.getAll().map { roomUser ->

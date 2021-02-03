@@ -25,12 +25,12 @@ import moxy.ktx.moxyPresenter
 class UserFragment() : MvpAppCompatFragment(), IUserView,
     BackButtonListener {
     companion object {
-            private const val USER_ARG = "user"
+        private const val USER_ARG = "user"
 
-            fun newInstance(user: GithubUser) = UserFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(USER_ARG, user)
-                }
+        fun newInstance(user: GithubUser) = UserFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(USER_ARG, user)
+            }
         }
     }
 
@@ -38,16 +38,7 @@ class UserFragment() : MvpAppCompatFragment(), IUserView,
 
     private val userPresenter by moxyPresenter {
         val user = arguments?.getParcelable<GithubUser>(USER_ARG) as GithubUser
-        UserPresenter(
-            user,
-            AndroidSchedulers.mainThread(),
-            RetrofitGithubRepositoriesRepo(
-                ApiHolder().api,
-                AndroidNetworkStatus(App.instance),
-                RoomGithubRepositoriesCache(Database.getInstance())
-            ),
-            App.instance.router
-        )
+        UserPresenter(user).apply { App.instance.appComponent.inject(this) }
     }
 
     override fun onCreateView(
