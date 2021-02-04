@@ -1,10 +1,9 @@
-package com.koshake1.mygithubclient.mvp.ui.adapter
+package com.koshake1.mygithubclient.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.contentValuesOf
 import androidx.recyclerview.widget.RecyclerView
 import com.koshake1.mygithubclient.R
 import com.koshake1.mygithubclient.mvp.model.image.IImageLoader
@@ -16,9 +15,12 @@ import kotlinx.android.synthetic.main.item_user.view.*
 import javax.inject.Inject
 
 class UsersRVAdapter(
-    private val presenter: IUserListPresenter,
-    private val imageLoader: GlideImageLoader
+    private val presenter: IUserListPresenter
+    //private val imageLoader: GlideImageLoader
 ) : RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
+
+    @Inject
+    lateinit var imageLoader: IImageLoader<ImageView>
 
     inner class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView),

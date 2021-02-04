@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.koshake1.mygithubclient.App
 import com.koshake1.mygithubclient.R
+import com.koshake1.mygithubclient.di.user.UserSubComponent
 import com.koshake1.mygithubclient.mvp.presenter.UsersPresenter
-import com.koshake1.mygithubclient.mvp.ui.adapter.UsersRVAdapter
+import com.koshake1.mygithubclient.ui.adapter.UsersRVAdapter
 import com.koshake1.mygithubclient.mvp.view.IUsersView
 import com.koshake1.mygithubclient.ui.BackButtonListener
 import com.koshake1.mygithubclient.ui.GlideImageLoader
@@ -23,9 +24,11 @@ class UsersFragment : MvpAppCompatFragment(), IUsersView, BackButtonListener {
         fun newInstance() = UsersFragment()
     }
 
+    private var userSubComponent: UserSubComponent? = null
     private val presenter by moxyPresenter {
+        userSubComponent = App.instance.initUserSubComponent()
         UsersPresenter(AndroidSchedulers.mainThread()).apply {
-            App.instance.appComponent.inject(this)
+            userSubComponent?.inject(this)
         }
     }
 
@@ -40,7 +43,9 @@ class UsersFragment : MvpAppCompatFragment(), IUsersView, BackButtonListener {
 
     override fun init() {
         rv_users.layoutManager = LinearLayoutManager(context)
-        adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
+        adapter = UsersRVAdapter(presenter.usersListPresenter).apply {
+            userSubComponent?.inject(this)
+        }
         rv_users.adapter = adapter
     }
 
@@ -49,4 +54,9 @@ class UsersFragment : MvpAppCompatFragment(), IUsersView, BackButtonListener {
     }
 
     override fun backPressed() = presenter.backPressed()
+
+    override fun release() {
+        userSubComponent = null
+        App.instance.releaseUserSubComponent()
+    }
 }

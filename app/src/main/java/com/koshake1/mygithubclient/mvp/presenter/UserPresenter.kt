@@ -3,14 +3,9 @@ package com.koshake1.mygithubclient.mvp.presenter
 import com.koshake1.mygithubclient.mvp.model.GithubRepository
 import com.koshake1.mygithubclient.mvp.model.GithubUser
 import com.koshake1.mygithubclient.mvp.model.repo.IGithubRepositoriesRepo
-import com.koshake1.mygithubclient.mvp.model.repo.IGithubUsersRepo
-import com.koshake1.mygithubclient.mvp.model.room.Database
-import com.koshake1.mygithubclient.mvp.presenter.list.IListPresenter
 import com.koshake1.mygithubclient.mvp.presenter.list.IRepoListPresenter
-import com.koshake1.mygithubclient.mvp.presenter.list.IUserListPresenter
 import com.koshake1.mygithubclient.mvp.view.IUserView
 import com.koshake1.mygithubclient.mvp.view.list.IRepoItemView
-import com.koshake1.mygithubclient.mvp.view.list.IUserItemView
 import com.koshake1.mygithubclient.navigation.Screens
 import io.reactivex.rxjava3.core.Scheduler
 import moxy.MvpPresenter
@@ -20,13 +15,11 @@ import javax.inject.Inject
 class UserPresenter(private val user: GithubUser) : MvpPresenter<IUserView>() {
 
     @Inject
-    lateinit var  router: Router
-    @Inject
-    lateinit var database: Database
-    @Inject
-    lateinit var repositoriesRepo: IGithubRepositoriesRepo
+    lateinit var router: Router
+
     @Inject
     lateinit var usersRepo: IGithubRepositoriesRepo
+
     @Inject
     lateinit var mainThreadScheduler: Scheduler
 
@@ -38,7 +31,7 @@ class UserPresenter(private val user: GithubUser) : MvpPresenter<IUserView>() {
 
         override fun bindView(view: IRepoItemView) {
             val repo = repos[view.pos]
-            repo.name?.let {view.setName(it)}
+            repo.name?.let { view.setName(it) }
         }
 
         override fun getCount(): Int {
@@ -77,6 +70,6 @@ class UserPresenter(private val user: GithubUser) : MvpPresenter<IUserView>() {
 
     override fun onDestroy() {
         super.onDestroy()
+        viewState.release()
     }
-
 }

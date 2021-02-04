@@ -6,10 +6,11 @@ import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
-class RepositoryPresenter(private val githubRepository: GithubRepository) : MvpPresenter<IRepositoryView>() {
+class RepositoryPresenter(private val githubRepository: GithubRepository) :
+    MvpPresenter<IRepositoryView>() {
 
     @Inject
-    lateinit var  router: Router
+    lateinit var router: Router
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

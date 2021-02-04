@@ -2,7 +2,6 @@ package com.koshake1.mygithubclient.mvp.presenter
 
 import com.koshake1.mygithubclient.mvp.model.GithubUser
 import com.koshake1.mygithubclient.mvp.model.repo.IGithubUsersRepo
-import com.koshake1.mygithubclient.mvp.model.room.Database
 import com.koshake1.mygithubclient.mvp.presenter.list.IUserListPresenter
 import com.koshake1.mygithubclient.mvp.view.IUsersView
 import com.koshake1.mygithubclient.mvp.view.list.IUserItemView
@@ -14,15 +13,12 @@ import javax.inject.Inject
 
 class UsersPresenter(
     private val mainThreadScheduler: Scheduler,
-
-) : MvpPresenter<IUsersView>() {
+    ) : MvpPresenter<IUsersView>() {
 
     @Inject
     lateinit var usersRepo: IGithubUsersRepo
     @Inject
     lateinit var router: Router
-    @Inject
-    lateinit var database: Database
 
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
@@ -31,8 +27,8 @@ class UsersPresenter(
 
         override fun bindView(view: IUserItemView) {
             val user = users[view.pos]
-            user.login?.let {view.setLogin(it)}
-            user.avatarUrl?.let {view.loadAvatar(it)}
+            user.login?.let { view.setLogin(it) }
+            user.avatarUrl?.let { view.loadAvatar(it) }
         }
 
         override fun getCount(): Int {
@@ -68,5 +64,10 @@ class UsersPresenter(
     fun backPressed(): Boolean {
         router.exit()
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewState.release()
     }
 }
