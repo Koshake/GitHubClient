@@ -1,4 +1,4 @@
-package room.mvp.model.room.dao
+package com.koshake1.mygithubclient.mvp.model.room.dao
 
 import androidx.room.*
 import com.koshake1.mygithubclient.mvp.model.room.RoomGithubUser

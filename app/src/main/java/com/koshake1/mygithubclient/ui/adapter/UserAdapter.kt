@@ -1,4 +1,4 @@
-package com.koshake1.mygithubclient.mvp.ui.adapter
+package com.koshake1.mygithubclient.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View

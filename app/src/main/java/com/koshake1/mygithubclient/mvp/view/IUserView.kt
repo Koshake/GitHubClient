@@ -6,7 +6,7 @@ import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface IUserView : MvpView {
-    fun setTitle(text: String)
     fun updateList()
     fun init()
+    fun release()
 }

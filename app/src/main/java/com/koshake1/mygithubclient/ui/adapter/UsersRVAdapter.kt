@@ -1,22 +1,26 @@
-package com.koshake1.mygithubclient.mvp.ui.adapter
+package com.koshake1.mygithubclient.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.contentValuesOf
 import androidx.recyclerview.widget.RecyclerView
 import com.koshake1.mygithubclient.R
 import com.koshake1.mygithubclient.mvp.model.image.IImageLoader
 import com.koshake1.mygithubclient.mvp.presenter.list.IUserListPresenter
 import com.koshake1.mygithubclient.mvp.view.list.IUserItemView
+import com.koshake1.mygithubclient.ui.GlideImageLoader
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_user.view.*
+import javax.inject.Inject
 
 class UsersRVAdapter(
-    private val presenter: IUserListPresenter,
-    private val imageLoader: IImageLoader<ImageView>
+    private val presenter: IUserListPresenter
+    //private val imageLoader: GlideImageLoader
 ) : RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
+
+    @Inject
+    lateinit var imageLoader: IImageLoader<ImageView>
 
     inner class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView),
@@ -24,12 +28,6 @@ class UsersRVAdapter(
 
         override fun setLogin(text: String) = with(containerView) {
             tv_login.text = text
-        }
-
-        override fun getLogin(): String {
-            with(containerView) {
-                return tv_login.text.toString()
-            }
         }
 
         override fun loadAvatar(url: String) = with(containerView) {
